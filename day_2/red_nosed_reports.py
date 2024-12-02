@@ -16,9 +16,23 @@ def report_is_safe(report: list[int]):
     return True
 
 
+def report_is_almost_safe(report: list[int]):
+    if report_is_safe(report):
+        return True
+
+    for level_index in range(len(report)):
+        if report_is_safe(report[:level_index] + report[level_index + 1:]):
+            return True
+
+    return False
+
+
 if __name__ == "__main__":
     with open("day_2/inputs/input.txt") as unusual_data:
         unusual_data = [[int(level) for level in report.split()] for report in unusual_data]
 
         safe_reports = [report for report in unusual_data if report_is_safe(report)]
+        print(len(safe_reports))
+
+        safe_reports = [report for report in unusual_data if report_is_almost_safe(report)]
         print(len(safe_reports))
