@@ -26,6 +26,18 @@ def is_in_order(update, prerequisites):
     return True
 
 
+def order_update(update, prerequisites):
+    for position in range(len(update) - 1, -1, -1):
+        dependants = prerequisites[str(update[position])]
+        current = position
+        for latter_position in range(position, len(update)):
+            if update[latter_position] in dependants:
+                update[current], update[latter_position] = update[latter_position], update[current]
+                current = latter_position
+
+    return update
+
+
 if __name__ == "__main__":
     with open("day_5/inputs/input.txt") as print_instructions:
         updates, prerequisites = get_updates_and_prerequisites(print_instructions)
@@ -34,3 +46,9 @@ if __name__ == "__main__":
         update[len(update) // 2] for update in updates if is_in_order(update, prerequisites)
     ]
     print(sum(middle_page_of_ordered_updates))
+
+    amended_updates = [
+        order_update(update, prerequisites) for update in updates if not is_in_order(update, prerequisites)
+    ]
+    middle_page_of_amended_updates = [update[len(update) // 2] for update in amended_updates]
+    print(sum(middle_page_of_amended_updates))
