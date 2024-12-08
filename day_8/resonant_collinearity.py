@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     antinodes = set()
 
-    for frequency, locations in antennas.items():
+    for locations in antennas.values():
         for pairing in itertools.combinations(locations, 2):
             difference = subtract(pairing[0], pairing[1])
             nodes = add(pairing[0], difference), subtract(pairing[1], difference)
@@ -31,4 +31,21 @@ if __name__ == "__main__":
                 if 0 <= node[0] < len(antenna_map) and 0 <= node[1] < len(antenna_map[0]):
                     antinodes.add(node)
 
+    harmonic_antinodes = set()
+
+    for locations in antennas.values():
+        for pairing in itertools.combinations(locations, 2):
+            difference = subtract(pairing[0], pairing[1])
+
+            node = pairing[0]
+            while 0 <= node[0] < len(antenna_map) and 0 <= node[1] < len(antenna_map[0]):
+                harmonic_antinodes.add(node)
+                node = subtract(node, difference)
+
+            node = pairing[1]
+            while 0 <= node[0] < len(antenna_map) and 0 <= node[1] < len(antenna_map[0]):
+                harmonic_antinodes.add(node)
+                node = add(node, difference)
+
     print(len(antinodes))
+    print(len(harmonic_antinodes))
